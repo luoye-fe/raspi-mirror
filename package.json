@@ -8,8 +8,11 @@
     "cheerio": "^1.0.0-rc.2",
     "egg": "^1.9.0",
     "egg-scripts": "^2.1.0",
+    "egg-socket.io": "^3.0.0",
     "egg-view": "^1.1.2",
-    "egg-view-ejs": "^1.1.0"
+    "egg-view-ejs": "^1.1.0",
+    "node-schedule": "^1.2.5",
+    "socket.io": "^2.0.4"
   },
   "devDependencies": {
     "autod": "^2.10.0",

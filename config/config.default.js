@@ -8,10 +8,20 @@ module.exports = appInfo => {
     config.view = {
         mapping: {
             '.ejs': 'ejs',
-        },
+        }
     };
 
     config.ejs = {};
+
+    config.io = {
+        init: {}, // passed to engine.io
+        namespace: {
+            '/': {
+                connectionMiddleware: [],
+                packetMiddleware: [],
+            },
+        }
+    };
 
     return config;
 };

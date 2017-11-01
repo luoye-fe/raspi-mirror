@@ -207,11 +207,18 @@
 	</div>
 	<div class="bottom"></div>
 	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-
+	<script src="https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js"></script>
 	<script type="text/javascript">
+
+		var socket = io('/');
+
+		socket.on('initWeather', initWeather);
+		socket.on('initCalendar', initCalendar);
+
 		initWeather();
 		initCalendar();
 		initTime();
+		initClock();
 
 		// 初始化天气
 		function initWeather() {
@@ -236,16 +243,8 @@
 
 		// 初始化时间
 		function initTime() {
-
 			function animate() {
 				var now = new Date()
-				// var time = now.getHours() * 3600 +
-				//             now.getMinutes() * 60 +
-				//             now.getSeconds() * 1 +
-				//             now.getMilliseconds() / 1000
-				// rotate(secondElement, time)
-				// rotate(minuteElement, time / 60)
-				// rotate(hourElement, time / 60 / 12)
 				$('.time').html(
 					`
 					<span>${now.getHours()}</span>
@@ -255,15 +254,14 @@
 					`);
 				requestAnimationFrame(animate)
 			}
-
 			animate()
 		}
 
 		// 初始化时钟
 		var clock = document.querySelector('#utility-clock')
-		initClock(clock)
 		if (clock.parentNode.classList.contains('fill')) autoResize(clock, 295 + 32)
-		function initClock(container) {
+		function initClock() {
+			var container = document.querySelector('#utility-clock')
 		    var dynamic = container.querySelector('.dynamic')
 		    var hourElement = container.querySelector('.hour')
 		    var minuteElement = container.querySelector('.minute')
