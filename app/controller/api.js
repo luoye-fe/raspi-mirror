@@ -41,15 +41,15 @@ module.exports = app => {
             listJi.map(item => {
                 almanacJi.push($(listJi[item]).html());
             })
-            console.log(currentData.find('.wnrl_k_you_id_biaoti').html())
+
             const result = {
                 a: `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`, // 日期
                 b: (currentData.find('.wnrl_k_you_id_biaoti').html()).split(';').splice(-4).join(';').replace(')', ''), // 星期
                 c: `农历 ${currentData.find('.wnrl_k_you_id_wnrl_nongli').html()}`, // 农历日期
                 d: currentData.find('.wnrl_k_you_id_wnrl_nongli_ganzhi').html(), // 天干地支
-                e: currentData.find('.wnrl_k_you_id_wnrl_jieri_neirong').html().split(' '), // 节日
-                f: almanacYi, // 黄历 宜
-                g: almanacJi // 黄历 忌
+                // e: currentData.find('.wnrl_k_you_id_wnrl_jieri_neirong').html().split(' '), // 节日
+                // f: almanacYi, // 黄历 宜
+                // g: almanacJi // 黄历 忌
             };
 
             this.ctx.body = result;
