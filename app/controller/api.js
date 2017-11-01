@@ -19,8 +19,12 @@ module.exports = app => {
 
             $('.wea_info .left .info_uptime').remove()
             $('.wea_info .left .wea_tips').remove()
-
-            this.ctx.body = $('.wea_info .left').html();
+            $('.forecast .g_title').remove()
+            
+            this.ctx.body = {
+                a: $('.wea_info .left').html(),
+                b: $('.forecast').html()
+            };
         }
         async calendar() {
         	const res = await HttpInstance.get('https://wannianrili.51240.com/');
