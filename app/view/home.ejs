@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>树莓派</title>
-	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+	<!-- <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/> -->
 	<link type="image/x-icon" rel="shortcut icon" href="https://luoyefe.com/favicon.ico">
 	<script>
 	var _hmt = _hmt || [];
@@ -53,13 +53,15 @@
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
+			/*margin: 0 auto;*/
+			/*display: none;*/
 		}
 
 		.bottom {
 			position: fixed;
+			bottom: 0;
 			left: 50%;
 			transform: translateX(-50%);
-			bottom: 0;
 			width: 100%;
 			display: flex;
 			justify-content: center;
