@@ -14,8 +14,32 @@ function getCurrentDay() {
 module.exports = app => {
     class ApiController extends app.Controller {
         async weather() {
-            const res = await HttpInstance.get('http://tianqi.moji.com/weather/china/zhejiang/hangzhou');
+
+            const { ctx } = this;
+
+            const weatherUrl = ctx.query.weatherUrl || 'http://tianqi.moji.com/weather/china/zhejiang/hangzhou';
+
+            let res = null;
+
+            try {
+                res = await HttpInstance.get(weatherUrl);
+            } catch(e) {
+                this.ctx.body = {
+                    error: 1,
+                    msg: '出错啦，刷新重试'
+                };
+                return;
+            }
+            
             const $ = cheerio.load(res.data);
+
+            if (!$('.search_default em').html()) {
+                this.ctx.body = {
+                    error: 1,
+                    msg: '天气地址有误'
+                };
+                return;
+            }
 
             $('.wea_info .left .info_uptime').remove()
             $('.wea_info .left .wea_tips').remove()

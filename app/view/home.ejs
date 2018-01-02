@@ -186,6 +186,18 @@
 		    transform: translate(-50%,-100%) translateY(-131px);
 		    opacity: 0.34;
 		}
+		.btn {
+			position: fixed;
+			bottom: 5px;
+			left: 10px;
+			font-size: 12px;
+			color: rgba(255,255,255,0.2);
+			cursor: pointer;
+			transition: all ease 0.3;
+		}
+		.btn:hover{
+			color: rgba(255,255,255,0.8);
+		}
 	</style>
 </head>
 <body>
@@ -223,125 +235,152 @@
 	<div class="bottom">
 		<div class="forecast clearfix"></div>
 	</div>
+
+	<div class="btn">设置</div>
 	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js"></script>
+
+	<script src="https://cdn.bootcss.com/layer/3.1.0/layer.js"></script>
+
 	<script type="text/javascript">
+		(function() {
+			
+			$('.btn').on('click', setWeather)
 
-		var socket = io('/');
+			const socket = io('/');
 
-		socket.on('initWeather', initWeather);
-		socket.on('initCalendar', initCalendar);
+			socket.on('initWeather', initWeather);
+			socket.on('initCalendar', initCalendar);
 
-		initWeather();
-		initCalendar();
-		initTime();
-		initClock();
+			initWeather();
+			initCalendar();
+			initTime();
+			initClock();
 
-		// 初始化天气
-		function initWeather() {
-			$.ajax('/api/weather')
-				.then(res => {
-					$('.weather').html(res.a);
-					$('.forecast').html(res.b);
-				})
-		}
-
-		// 初始化日历
-		function initCalendar() {
-			$.ajax('/api/calendar')
-				.then(res => {
-					$('.calendar').html(
-						`
-						<p style="font-size: 30px;line-height: 52px;">${res.a} ${res.b}</p>
-						<p>${res.c}</p>
-						<p>${res.d}</p>
-						`);
-				})
-		}
-
-		// 初始化时间
-		function initTime() {
-			function animate() {
-				var now = new Date()
-				$('.time').html(
-					`
-					<span>${now.getHours()}</span>
-					<span>:</span>
-					<span>${now.getMinutes()}</span>
-					<span>${String(new Date().getSeconds()).length === 1 ? ('0' + now.getSeconds()) : now.getSeconds()}</span>
-					`);
-				requestAnimationFrame(animate)
+			// 设置天气地址
+			function setWeather() {
+				layer.prompt({
+					title: '请填入所在地墨迹天气地址（http://tianqi.moji.com/weather/china/zhejiang/hangzhou）',
+					closeBtn: 0,
+					shadeClose: false,
+					move: false
+				}, function(pass, index){
+					localStorage.setItem('weatherUrl', pass);
+				  	layer.close(index);
+				  	initWeather();
+				});
 			}
-			animate()
-		}
 
-		// 初始化时钟
-		var clock = document.querySelector('#utility-clock')
-		if (clock.parentNode.classList.contains('fill')) autoResize(clock, 295 + 32)
-		function initClock() {
-			var container = document.querySelector('#utility-clock')
-		    var dynamic = container.querySelector('.dynamic')
-		    var hourElement = container.querySelector('.hour')
-		    var minuteElement = container.querySelector('.minute')
-		    var secondElement = container.querySelector('.second')
-		    var minute = function(n) {
-		        return n % 5 == 0 ? minuteText(n) : minuteLine(n)
-		    }
-		    var minuteText = function(n) {
-		        var element = document.createElement('div')
-		        element.className = 'minute-text'
-		        element.innerHTML = (n < 10 ? '0' : '') + n
-		        position(element, n / 60, 135)
-		        dynamic.appendChild(element)
-		    }
-		    var minuteLine = function(n) {
-		        var anchor = document.createElement('div')
-		        anchor.className = 'anchor'
-		        var element = document.createElement('div')
-		        element.className = 'element minute-line'
-		        rotate(anchor, n)
-		        anchor.appendChild(element)
-		        dynamic.appendChild(anchor)
-		    }
-		    var hour = function(n) {
-		        var element = document.createElement('div')
-		        element.className = 'hour-text hour-' + n
-		        element.innerHTML = n
-		        position(element, n / 12, 105)
-		        dynamic.appendChild(element)
-		    }
-		    var position = function(element, phase, r) {
-		        var theta = phase * 2 * Math.PI
-		        element.style.top = (-r * Math.cos(theta)).toFixed(1) + 'px'
-		        element.style.left = (r * Math.sin(theta)).toFixed(1) + 'px'
-		    }
-		    var rotate = function(element, second) {
-		        element.style.transform = element.style.webkitTransform = 'rotate(' + (second * 6) + 'deg)'
-		    }
-		    var animate = function() {
-		        var now = new Date()
-		        var time = now.getHours() * 3600 +
-		                    now.getMinutes() * 60 +
-		                    now.getSeconds() * 1 +
-		                    now.getMilliseconds() / 1000
-		        rotate(secondElement, time)
-		        rotate(minuteElement, time / 60)
-		        rotate(hourElement, time / 60 / 12)
-		        requestAnimationFrame(animate)
-		    }
-		    for (var i = 1; i <= 60; i ++) minute(i)
-		    for (var i = 1; i <= 12; i ++) hour(i)
-		    animate()
-		}
+			// 初始化天气
+			function initWeather() {
+				var weatherUrl = localStorage.getItem('weatherUrl') || 'http://tianqi.moji.com/weather/china/zhejiang/hangzhou';
+				$.get('/api/weather', {
+						weatherUrl
+					})
+					.then(res => {
+						if (res.error) return layer.open({content: '天气地址有误，点击右下角重新设置'});
+						$('.weather').html(res.a);
+						$('.forecast').html(res.b);
+					})
+			}
 
-		function autoResize(element, nativeSize) {
-		    var update = function() {
-		        var scale = Math.min(600, 600) / nativeSize
-		        element.style.transform = element.style.webkitTransform = 'scale(' + scale.toFixed(3) + ')'
-		    }
-		    update()
-		    window.addEventListener('resize', update)
-		}
+			// 初始化日历
+			function initCalendar() {
+				$.ajax('/api/calendar')
+					.then(res => {
+						$('.calendar').html(
+							`
+							<p style="font-size: 30px;line-height: 52px;">${res.a} ${res.b}</p>
+							<p>${res.c}</p>
+							<p>${res.d}</p>
+							`);
+					})
+			}
+
+			// 初始化时间
+			function initTime() {
+				function animate() {
+					var now = new Date();
+					$('.time').html(
+						`
+						<span>${now.getHours()}</span>
+						<span>:</span>
+						<span>${now.getMinutes()}</span>
+						<span>${String(new Date().getSeconds()).length === 1 ? ('0' + now.getSeconds()) : now.getSeconds()}</span>
+						`);
+					requestAnimationFrame(animate)
+				}
+				animate()
+			}
+
+			// 初始化时钟
+			var clock = document.querySelector('#utility-clock')
+			if (clock.parentNode.classList.contains('fill')) autoResize(clock, 295 + 32)
+			function initClock() {
+				var container = document.querySelector('#utility-clock')
+			    var dynamic = container.querySelector('.dynamic')
+			    var hourElement = container.querySelector('.hour')
+			    var minuteElement = container.querySelector('.minute')
+			    var secondElement = container.querySelector('.second')
+			    var minute = function(n) {
+			        return n % 5 == 0 ? minuteText(n) : minuteLine(n)
+			    }
+			    var minuteText = function(n) {
+			        var element = document.createElement('div')
+			        element.className = 'minute-text'
+			        element.innerHTML = (n < 10 ? '0' : '') + n
+			        position(element, n / 60, 135)
+			        dynamic.appendChild(element)
+			    }
+			    var minuteLine = function(n) {
+			        var anchor = document.createElement('div')
+			        anchor.className = 'anchor'
+			        var element = document.createElement('div')
+			        element.className = 'element minute-line'
+			        rotate(anchor, n)
+			        anchor.appendChild(element)
+			        dynamic.appendChild(anchor)
+			    }
+			    var hour = function(n) {
+			        var element = document.createElement('div')
+			        element.className = 'hour-text hour-' + n
+			        element.innerHTML = n
+			        position(element, n / 12, 105)
+			        dynamic.appendChild(element)
+			    }
+			    var position = function(element, phase, r) {
+			        var theta = phase * 2 * Math.PI
+			        element.style.top = (-r * Math.cos(theta)).toFixed(1) + 'px'
+			        element.style.left = (r * Math.sin(theta)).toFixed(1) + 'px'
+			    }
+			    var rotate = function(element, second) {
+			        element.style.transform = element.style.webkitTransform = 'rotate(' + (second * 6) + 'deg)'
+			    }
+			    var animate = function() {
+			        var now = new Date()
+			        var time = now.getHours() * 3600 +
+			                    now.getMinutes() * 60 +
+			                    now.getSeconds() * 1 +
+			                    now.getMilliseconds() / 1000
+			        rotate(secondElement, time)
+			        rotate(minuteElement, time / 60)
+			        rotate(hourElement, time / 60 / 12)
+			        requestAnimationFrame(animate)
+			    }
+			    for (var i = 1; i <= 60; i ++) minute(i)
+			    for (var i = 1; i <= 12; i ++) hour(i)
+			    animate()
+			}
+
+			function autoResize(element, nativeSize) {
+			    var update = function() {
+			        var scale = Math.min(600, 600) / nativeSize
+			        element.style.transform = element.style.webkitTransform = 'scale(' + scale.toFixed(3) + ')'
+			    }
+			    update()
+			    window.addEventListener('resize', update)
+			}
+		})()
 	</script>
 </body>
 </html>
