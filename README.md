@@ -6,7 +6,7 @@
 
 推荐自己部署
 
-![](https://s10.mogucdn.com/mlcdn/c45406/180102_55776h2kffjba2l5hj7bedahgfajj_1920x1080.png)
+![](https://s10.mogucdn.com/mlcdn/c45406/180102_066e39hbjj5ke53l03a47k8b6d6bg_1920x1080.png)
 
 ## 说明
 
