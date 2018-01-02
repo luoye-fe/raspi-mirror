@@ -1,33 +1,43 @@
 # raspi-mirror
 
-树莓派魔镜
+树莓派魔镜，用于简单的展示天气与时间
 
-## QuickStart
+[DEMO](http://raspi-mirror.luoyefe.com/)
 
-<!-- add docs here for user -->
+推荐自己部署
 
-see [egg docs][egg] for more detail.
+![](https://s10.mogucdn.com/mlcdn/c45406/180102_55776h2kffjba2l5hj7bedahgfajj_1920x1080.png)
 
-### Development
+## 说明
 
-```bash
-$ npm i
-$ npm run dev
-$ open http://localhost:7001/
-```
+* 使用 `egg.js` 开发
 
-### Deploy
+* 天气抓取 [墨迹天气](https://www.moji.com/) 的数据
 
-```bash
-$ npm start
-$ npm stop
-```
+* 天气每整点更新一次
 
-### npm scripts
+* 日历抓取 [便民查询](https://wannianrili.51240.com/) 的数据
 
-- Use `npm run lint` to check code style.
-- Use `npm test` to run unit test.
-- Use `npm run autod` to auto detect dependencies upgrade, see [autod](https://www.npmjs.com/package/autod) for more detail.
+* 日历每天 0 点更新
 
+## 部署
 
-[egg]: https://eggjs.org
+* clone 本项目
+
+* 安装 `node`
+
+* `npm install` 安装依赖
+
+* `npm run dev` 开发
+
+* `npm run start` 运行
+
+## 天气配置
+
+* 找到所在地天气在墨迹的地址
+
+* 如杭州天气在墨迹的地址为：`http://tianqi.moji.com/weather/china/zhejiang/hangzhou`
+
+* 点击页面左下角设置
+
+* 填入地址
