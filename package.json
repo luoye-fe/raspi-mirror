@@ -28,7 +28,7 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --port=7001 --stdout=/root/logs/raspi-mirror/master-stdout.log --stderr=/root/logs/raspi-mirror/master-stdout.log",
+    "start": "egg-scripts start --daemon --port=7001 --stdout=/root/logs/raspi-mirror/master-stdout.log --stderr=/root/logs/raspi-mirror/master-stderr.log",
     "stop": "egg-scripts stop",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
