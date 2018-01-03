@@ -30,18 +30,37 @@
 			justify-content: space-between;
 		}
 		.date {
-			color: #fff;
-			text-align: right;
-			font-size: 20px;
-			line-height: 34px;
-			font-style: normal;
 			display: flex;
 			flex-direction: column;
 			justify-content: flex-end;
+			transform-origin: 100% 0;
+		}
+		.calendar {
+			margin-top: 0;
+		}
+		.calendar p {
+			color: #fff;
+			text-align: right;
+			font-size: 20px;
+			line-height: 20px;
+			font-style: normal;
+			margin-top: 10px;
+		}
+		.weather {
+			transform-origin: 0 0;
+		}
+
+		.wea_weather em::before {
+			content: '°';
+		}
+
+		.wea_about em, .wea_about b {
+			margin-left: 10px;
 		}
 
 		.time {
 			font-size: 88px;
+			color: #fff;
 		}
 
 		.time span:last-child {
@@ -57,13 +76,13 @@
 
 		.bottom {
 			position: fixed;
-			bottom: 30px;
+			bottom: 0;
 			left: 50%;
 			transform: translateX(-50%);
-			width: 100%;
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			transform-origin: 0 100%;
 		}
 		.forecast {
 			width: 755px;
@@ -198,7 +217,7 @@
 		}
 		.btn {
 			position: fixed;
-			bottom: 30px;
+			bottom: 0;
 			left: 10px;
 			font-size: 12px;
 			color: rgba(255,255,255,0.2);
@@ -267,6 +286,9 @@
 			initTime();
 			initClock();
 
+			// 自动缩放
+			autoResize();
+
 			// 设置天气地址
 			function setWeather() {
 				layer.prompt({
@@ -325,7 +347,7 @@
 
 			// 初始化时钟
 			var clock = document.querySelector('#utility-clock')
-			if (clock.parentNode.classList.contains('fill')) autoResize(clock, 295 + 100)
+			// if (clock.parentNode.classList.contains('fill')) autoResize(clock)
 			function initClock() {
 				var container = document.querySelector('#utility-clock')
 			    var dynamic = container.querySelector('.dynamic')
@@ -382,10 +404,16 @@
 			    animate()
 			}
 
-			function autoResize(element, nativeSize) {
+			function autoResize() {
+				var clock = document.querySelector('#utility-clock');
+				var weather = $('.weather')[0];
+				var date = $('.date')[0];
+				var bottom = $('.bottom')[0];
 			    var update = function() {
-			        var scale = Math.min(600, 600) / nativeSize
-			        element.style.transform = element.style.webkitTransform = 'scale(' + scale.toFixed(3) + ')'
+			        clock.style.transform = clock.style.webkitTransform = 'scale(' + (window.innerHeight / 2 / 280).toFixed(3) + ')';
+			        weather.style.transform = weather.style.webkitTransform = 'scale(' + (window.innerWidth / 4 / 460).toFixed(3) + ')';
+			        date.style.transform = date.style.webkitTransform = 'scale(' + (window.innerWidth / 4 / 460).toFixed(3) + ')';
+			        bottom.style.transform = bottom.style.webkitTransform = 'scale(' + (window.innerWidth / 4 / 400).toFixed(3) + ') translateX(-50%)';
 			    }
 			    update()
 			    window.addEventListener('resize', update)
