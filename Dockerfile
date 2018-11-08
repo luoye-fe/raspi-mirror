@@ -1,15 +1,17 @@
-FROM l8g1m5el.mirror.aliyuncs.com/library/node:10.12.0
+FROM l8g1m5el.mirror.aliyuncs.com/library/node:10.12.0 as build
 
 RUN mkdir -p /home/service
 
 WORKDIR /home/service
 
-COPY package.json /home/service/package.json
+COPY . /home/service
 
 RUN npm install --registry=https://registry.npm.taobao.org
 
-COPY . /home/service
+FROM l8g1m5el.mirror.aliyuncs.com/library/node:10.12.0-alpine
 
-EXPOSE 7001
+COPY --from=build /home/service /
+
+EXPOSE 8123
 
 CMD npm run start
