@@ -4,7 +4,7 @@
   "description": "树莓派魔镜",
   "private": true,
   "dependencies": {
-    "axios": "^0.17.0",
+    "axios": "^0.19.0",
     "cheerio": "^1.0.0-rc.2",
     "egg": "^1.9.0",
     "egg-scripts": "^2.1.0",
